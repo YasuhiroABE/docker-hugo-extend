@@ -1,0 +1,14 @@
+diff --git a/tpl/transform/transform.go b/tpl/transform/transform.go
+index c9af141ed..7a48aabb3 100644
+--- a/tpl/transform/transform.go
++++ b/tpl/transform/transform.go
+@@ -177,7 +177,8 @@ func (ns *Namespace) Markdownify(ctx context.Context, s any) (template.HTML, err
+ 	if home == nil {
+ 		panic("home must not be nil")
+ 	}
+-	ss, err := home.RenderString(ctx, s)
++	renderOpts := map[string]any{ "Markup": "markdown", }
++	ss, err := home.RenderString(ctx, renderOpts, s)
+ 	if err != nil {
+ 		return "", err
+ 	}
