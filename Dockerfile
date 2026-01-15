@@ -1,7 +1,7 @@
 
-FROM docker.io/library/golang:1.24-alpine as hugodev
+FROM docker.io/library/golang:1.25.5-alpine as hugodev
 
-ARG hugo_version="v0.147.3"
+ARG hugo_version="v0.154.5"
 ARG hugo_patch="20241204_hugo_0.139.3.diff"
 
 RUN apk --no-cache add git make gcc g++ libc-dev patch
@@ -12,12 +12,12 @@ RUN mkdir ${GOPATH}
 RUN mkdir /work
 WORKDIR /work
 
-RUN git clone --branch ${hugo_version} https://github.com/gohugoio/hugo.git
+RUN git clone -c advice.detachedHead=false --branch ${hugo_version} --depth=1 https://github.com/gohugoio/hugo.git
 COPY patch/${hugo_patch} a.diff
 RUN cd hugo && patch -p1 < ../a.diff
 RUN cd hugo && CGO_ENABLED=1 go install -tags extended
 
-FROM docker.io/library/alpine:3.21
+FROM docker.io/library/alpine:3.23
 
 RUN apk update && apk add --no-cache tzdata bash ca-certificates rsync git asciidoctor libstdc++
 
